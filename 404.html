@@ -91,7 +91,7 @@ svg{width:24px;height:24px;fill:currentColor}
     <p>Fale com a gente agora e receba seu <b>teste grátis</b> na hora.</p>
     <div class="bul"><span>⚡ Resposta na hora</span><span>📺 Todos os aparelhos</span></div>
     <input id="iNome" placeholder="Seu nome" autocomplete="given-name" maxlength="60">
-    <input id="iTel" placeholder="Seu WhatsApp com DDD" inputmode="tel" autocomplete="tel" maxlength="16">
+    <input id="iTel" placeholder="Seu WhatsApp com DDD" inputmode="tel" autocomplete="tel" maxlength="20">
     <div class="err" id="err"></div>
     <button class="cta" id="bStart">Iniciar conversa</button>
     <div class="fine">Seu WhatsApp é usado só para enviar seu acesso e avisos do seu plano.</div>
@@ -282,7 +282,7 @@ function origem() {
   if (document.referrer) o.referrer = document.referrer.slice(0, 300);
   return o;
 }
-$('iTel').addEventListener('input', e => { let d = e.target.value.replace(/\D/g, '').slice(0, 11);
+$('iTel').addEventListener('input', e => { let d = e.target.value.replace(/\D/g, ''); if (d.length > 11 && d.startsWith('55')) d = d.slice(2); d = d.slice(0, 11);
   e.target.value = d.length > 7 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : d.length > 2 ? `(${d.slice(0, 2)}) ${d.slice(2)}` : d; });
 $('bStart').onclick = async () => {
   const nome = $('iNome').value.trim(), tel = $('iTel').value.replace(/\D/g, '');
@@ -294,7 +294,7 @@ $('bStart').onclick = async () => {
     const r = await api({ acao: 'iniciar', conta: CONTA, nome, telefone: tel, origem: origem() });
     if (r.jaCliente) {
       $('err').textContent = '';
-      document.querySelector('.card').innerHTML = `<div class="logo">TB</div><h1>Você já é cliente The Best 💙</h1><p>Para sua segurança, o atendimento de quem já é cliente é pelo nosso WhatsApp oficial.</p>${r.whatsapp ? `<a class="cta" style="display:block;text-decoration:none" href="${esc(r.whatsapp)}">Abrir WhatsApp oficial</a>` : ''}`;
+      document.querySelector('.card').innerHTML = '<div class="logo">TB</div><h1>Você já é cliente The Best 💙</h1><p>Este canal é só para novos clientes. Para qualquer atendimento, fale com a gente pelo nosso WhatsApp de sempre ou pelo aplicativo.</p>';
       return;
     }
     token = r.token; try { localStorage.setItem(KEY, token); } catch {}
